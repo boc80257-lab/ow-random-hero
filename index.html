@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>OW 随机英雄</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: #1a1a2e; color: #fff;
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    padding: 24px; user-select: none;
+  }
+  .title { font-size: 22px; font-weight: bold; color: #f0a500; margin-bottom: 28px; letter-spacing: 2px; }
+  .result-box {
+    width: 100%; max-width: 360px; height: 180px;
+    background: #16213e; border-radius: 16px; border: 1px solid #0f3460;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    margin-bottom: 28px;
+  }
+  .role-type { font-size: 15px; color: #a0a0a0; margin-bottom: 10px; min-height: 20px; }
+  .hero-name { font-size: 40px; font-weight: bold; color: #e94560; min-height: 52px; }
+  .draw-btn {
+    width: 100%; max-width: 360px; padding: 16px 0;
+    background: #e94560; color: #fff; border: none; border-radius: 999px;
+    font-size: 20px; font-weight: bold; cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+  }
+  .draw-btn:active { transform: scale(0.96); opacity: 0.85; }
+  .draw-btn:disabled { opacity: 0.6; }
+  .hint { margin-top: 20px; font-size: 12px; color: #666; }
+</style>
+</head>
+<body>
+  <div class="title">OW 随机英雄</div>
+  <div class="result-box">
+    <div class="role-type" id="roleType"></div>
+    <div class="hero-name" id="heroName">点击抽取</div>
+  </div>
+  <button class="draw-btn" id="drawBtn">抽一个</button>
+  <div class="hint">只抽 C 和 奶</div>
+
+<script>
+  const dpsList = ['艾什','堡垒','卡西迪','回声','源氏','半藏','狂鼠','美','法老之鹰','死神','士兵:76','黑影','秩序之光','托比昂','猎空','黑百合','索杰恩'];
+  const supportList = ['安娜','巴蒂斯特','布里吉塔','伊拉锐','朱诺','雾子','生命之梭','卢西奥','天使','莫伊拉','禅雅塔','无漾'];
+
+  const roleEl = document.getElementById('roleType');
+  const heroEl = document.getElementById('heroName');
+  const btn = document.getElementById('drawBtn');
+  let drawing = false;
+
+  btn.addEventListener('click', () => {
+    if (drawing) return;
+    drawing = true;
+    btn.disabled = true;
+    heroEl.textContent = '...';
+    roleEl.textContent = '抽取中';
+
+    setTimeout(() => {
+      const isDps = Math.random() < 0.5;
+      const pool = isDps ? dpsList : supportList;
+      const hero = pool[Math.floor(Math.random() * pool.length)];
+
+      roleEl.textContent = isDps ? '输出 (C)' : '支援 (奶)';
+      heroEl.textContent = hero;
+
+      if (navigator.vibrate) navigator.vibrate(30);
+      drawing = false;
+      btn.disabled = false;
+    }, 300);
+  });
+</script>
+</body>
+</html>
